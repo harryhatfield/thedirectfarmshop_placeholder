@@ -191,7 +191,7 @@
   }
   .role-option input{margin:0;accent-color:var(--harvest);}
   .role-option.active{border-color:var(--harvest);background:rgba(201,138,43,.12);}
-  .honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .honeypot{display:none;}
   .turnstile-wrap{display:flex;justify-content:center;margin:.3rem 0;}
   .signup-form button{
     font-family:var(--body);font-weight:700;font-size:.95rem;
@@ -327,10 +327,13 @@
           <input type="text" id="postcode" name="postcode" placeholder="e.g. BA11" autocomplete="postal-code">
         </div>
 
-        <!-- Honeypot: left blank by people, filled in by bots -->
+        <!-- Honeypot: left blank by people, filled in by bots. Field name is
+             deliberately not one of the common autofill categories (company,
+             name, email, url, phone...) so browser autofill doesn't trip it
+             for real visitors. -->
         <div class="honeypot" aria-hidden="true">
-          <label for="company">Company</label>
-          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+          <label for="hp-note">Leave this field blank</label>
+          <input type="text" id="hp-note" name="hp_note" tabindex="-1" autocomplete="off">
         </div>
 
         <div class="turnstile-wrap">
@@ -374,7 +377,7 @@ document.querySelectorAll('.role-option input').forEach(function(input){
 
     var email = form.email.value.trim();
     var postcode = form.postcode.value.trim();
-    var company = form.company.value.trim();
+    var hpNote = form.hp_note.value.trim();
     var role = (form.querySelector('input[name="role"]:checked') || {}).value || 'shopper';
     var token = window.turnstile ? window.turnstile.getResponse() : '';
 
@@ -396,7 +399,7 @@ document.querySelectorAll('.role-option input').forEach(function(input){
     fetch(SUBSCRIBE_API_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, postcode: postcode, role: role, company: company, turnstileToken: token})
+      body: JSON.stringify({email: email, postcode: postcode, role: role, hp_note: hpNote, turnstileToken: token})
     })
     .then(function(res){ return res.json().then(function(data){ return {ok: res.ok, data: data}; }); })
     .then(function(result){

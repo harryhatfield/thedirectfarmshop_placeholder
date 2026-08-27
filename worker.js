@@ -55,11 +55,11 @@ async function handleSubscribe(request, env, cors) {
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const postcode = typeof body.postcode === "string" ? body.postcode.trim().slice(0, 16) : "";
   const role = body.role === "farmer" ? "farmer" : "shopper";
-  const company = typeof body.company === "string" ? body.company.trim() : "";
+  const hpNote = typeof body.hp_note === "string" ? body.hp_note.trim() : "";
   const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
 
   // Honeypot: real visitors never fill this in.
-  if (company) {
+  if (hpNote) {
     return json({ ok: true }, 200, cors);
   }
 
