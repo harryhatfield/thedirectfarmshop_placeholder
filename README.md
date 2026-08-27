@@ -10,15 +10,14 @@ and a confirmation email goes out via Resend.
 
 ### 1. Cloudflare Turnstile (CAPTCHA)
 
-1. In the Cloudflare dashboard, go to **Turnstile** → **Add site**.
-2. Use a "Managed" widget. Add your Pages domain (and `localhost` for local dev).
-3. Copy the **Site key** and paste it into `index.html`, replacing the
-   placeholder in:
-   ```html
-   <div class="cf-turnstile" data-sitekey="0x00000000000000000000AA" data-theme="dark"></div>
-   ```
-   Site keys are public by design — safe to commit.
-4. Copy the **Secret key** — you'll set it as `TURNSTILE_SECRET_KEY` below (keep this one private).
+The widget's site key (`0x4AAAAAAEdqC2ClL0ZxeAH4`) is already wired into
+`index.html` — site keys are public by design, safe to commit. Make sure
+the widget's allowed domains (in the Cloudflare dashboard → Turnstile →
+your widget) include your Pages domain and `localhost` for local dev.
+
+You still need the widget's **Secret key** (shown once at creation, or
+re-viewable in the dashboard) — set it as `TURNSTILE_SECRET_KEY` below.
+Never put the secret key in code, only in the Pages environment variables.
 
 ### 2. Resend
 
