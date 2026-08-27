@@ -156,6 +156,21 @@
   .section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
   .section-head.center .eyebrow::before{display:none;}
 
+  /* ---------- CATEGORIES ---------- */
+  .categories{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+    gap:.7rem;margin-top:2.6rem;
+  }
+  .cat-label{
+    font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;
+    color:var(--hedgerow);opacity:.7;width:100%;text-align:center;margin-bottom:.4rem;
+  }
+  .chip{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.5px;text-transform:uppercase;
+    background:var(--white);border:1px solid rgba(35,38,30,.15);color:var(--hedgerow);
+    padding:.5em 1.1em;border-radius:20px;
+  }
+
   /* ---------- HOW IT WORKS ---------- */
   .steps{
     display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;
@@ -280,12 +295,22 @@
     <div class="section-head center">
       <span class="eyebrow">The idea</span>
       <h2>One marketplace, every farm in the country</h2>
-      <p>TheDirectFarmShop is a single marketplace where farms across the UK list their own stock — picked, milked, baked, or collected <em>today</em> — priced plainly and updated as it sells. You'll always see the whole country's board, but it's sorted by what's closest to you first, so a farm five miles away shows before one five hundred miles off. Every farm sets its own delivery: some ship UK-wide, some keep it to local collection only — either way, you'll know which before you order.</p>
+      <p>TheDirectFarmShop is a single marketplace where farms across the UK list their own stock — picked, milked, baked, or collected <em>today</em> — priced plainly and updated as it sells. Browse it like your usual online supermarket shop: everything's sorted into categories, so you pick items and quantities and check out — except every item comes from a named farm instead of a warehouse, and the whole country's on there, sorted by what's closest to you first.</p>
     </div>
     <div class="pillars" style="margin-top:2.2rem;">
-      <div class="pillar"><h3>One marketplace</h3><p>Every farm sells through the same board — no separate sites or accounts, just one place to browse.</p></div>
+      <div class="pillar"><h3>One marketplace</h3><p>Every farm sells through the same listings — no separate sites or accounts, just one place to shop.</p></div>
       <div class="pillar"><h3>Sorted by distance</h3><p>The whole country's on there, closest farms first. Widen it, or narrow it to just your patch.</p></div>
       <div class="pillar"><h3>Collection or delivery</h3><p>Some farms deliver UK-wide, some are collection-only — marked clearly on every listing.</p></div>
+    </div>
+
+    <div class="categories">
+      <span class="cat-label">Browse by category</span>
+      <span class="chip">Fruit &amp; Veg</span>
+      <span class="chip">Meat &amp; Poultry</span>
+      <span class="chip">Dairy &amp; Eggs</span>
+      <span class="chip">Bakery</span>
+      <span class="chip">Fish &amp; Seafood</span>
+      <span class="chip">Store Cupboard</span>
     </div>
   </div>
 </section>
@@ -305,7 +330,7 @@
       <div class="step">
         <div class="num">STEP 02</div>
         <h3>See today's board</h3>
-        <p>What's been picked, what's left, and what it costs — plainly priced, nearest farms first.</p>
+        <p>Browse by category, same as any online shop — what's been picked, what's left, plainly priced, nearest farms first.</p>
       </div>
       <div class="step">
         <div class="num">STEP 03</div>
