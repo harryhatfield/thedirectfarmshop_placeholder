@@ -2,9 +2,11 @@
 
 A single static page (`index.html`) plus one Cloudflare Pages Function
 (`functions/api/subscribe.js`) that handles the email signup form:
-Turnstile verifies the visitor is human, then the email + postcode are
-added to a Resend Audience (the waitlist itself — no separate database)
-and a confirmation email goes out via Resend.
+Turnstile verifies the visitor is human, then the signup (email, postcode,
+and whether they're a shopper or a farmer) is added to a Resend Audience
+(the waitlist itself — no separate database) and a confirmation email goes
+out via Resend. Shoppers and farmers are kept in separate audiences so
+each group can be followed up with differently.
 
 ## Setup
 
@@ -24,8 +26,8 @@ Never put the secret key in code, only in the Pages environment variables.
 1. Create a [Resend](https://resend.com) account and verify the sending domain
    you'll use for `RESEND_FROM` (e.g. `hello@thedirectfarmshop.com`).
 2. Create an **API key**.
-3. Create an **Audience** (Resend's contact list feature) — this *is* the
-   waitlist. Copy its Audience ID.
+3. Create two **Audiences** (Resend's contact list feature) — these *are*
+   the waitlist — one for shoppers, one for farmers. Copy each Audience ID.
 
 ### 3. Cloudflare Pages project
 

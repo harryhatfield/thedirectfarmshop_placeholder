@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TheDirectFarmShop — Coming soon</title>
 <meta name="description" content="What's actually in stock, near you, today. TheDirectFarmShop is coming — sign up and we'll tell you the moment it's live in your postcode.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@400;500;600&family=Kalam:wght@400;700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -76,66 +77,6 @@
     font-size:clamp(1.05rem,2.4vw,1.35rem);
     color:var(--charcoal);
     max-width:34ch;margin:0 auto 2.6rem;
-  }
-
-  /* ---------- STOCK BOARD ---------- */
-  .board{
-    background:var(--hedgerow-dark);
-    background-image:
-      radial-gradient(ellipse at top left, rgba(255,255,255,.05), transparent 60%),
-      radial-gradient(ellipse at bottom right, rgba(255,255,255,.04), transparent 55%);
-    border-radius:10px;
-    padding:2.1rem 1.8rem 1.9rem;
-    max-width:560px;
-    margin:0 auto;
-    box-shadow:0 18px 40px -18px rgba(0,0,0,.5), inset 0 0 0 6px #17251c, inset 0 0 0 8px #3c5644;
-    text-align:left;
-    position:relative;
-  }
-  .board::before{
-    content:"PREVIEW — TODAY'S BOARD";
-    display:block;
-    font-family:var(--mono);
-    color:var(--sage);
-    font-size:.68rem;
-    letter-spacing:2.5px;
-    margin-bottom:1.1rem;
-  }
-  .board ul{list-style:none;margin:0;padding:0;}
-  .board li{
-    display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-    font-family:var(--chalk);
-    color:var(--paper);
-    font-size:1.22rem;
-    padding:.55rem 0;
-    border-bottom:1px dashed rgba(241,239,225,.18);
-    position:relative;
-    cursor:pointer;
-    user-select:none;
-  }
-  .board li:last-child{border-bottom:none;}
-  .board li .name{display:flex;align-items:baseline;gap:.55em;}
-  .board li .tick{color:var(--harvest);font-family:var(--body);font-weight:700;font-size:1rem;}
-  .board li .price{font-family:var(--mono);font-size:.92rem;color:var(--sage);white-space:nowrap;}
-  .board li .stamp-out{
-    position:absolute;left:38%;top:50%;
-    transform:translate(-50%,-50%) rotate(-9deg) scale(.4);
-    font-family:var(--mono);font-weight:600;
-    font-size:.95rem;letter-spacing:2px;
-    color:var(--plum);
-    border:2.5px solid var(--plum);
-    padding:.15em .5em;
-    border-radius:3px;
-    opacity:0;
-    transition:transform .35s cubic-bezier(.2,1.4,.4,1), opacity .35s ease;
-    pointer-events:none;
-    background:rgba(35,38,30,.55);
-  }
-  .board li.sold .stamp-out{opacity:1;transform:translate(-50%,-50%) rotate(-9deg) scale(1);}
-  .board li.sold .name,.board li.sold .price{opacity:.35;text-decoration:line-through;text-decoration-color:var(--plum);}
-  .board .hint{
-    margin-top:1.2rem;font-family:var(--mono);font-size:.66rem;color:var(--sage-dark);
-    letter-spacing:.5px;
   }
 
   /* ---------- PILLARS ---------- */
@@ -212,6 +153,15 @@
   }
   .field input::placeholder{color:rgba(241,239,225,.4);}
   .field input:focus{outline:2px solid var(--harvest);outline-offset:1px;}
+  .role-toggle{display:flex;gap:.6rem;}
+  .role-option{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:.5em;
+    font-family:var(--body);font-size:.9rem;color:var(--paper);
+    border:1px solid rgba(241,239,225,.25);border-radius:6px;
+    padding:.7em .5em;cursor:pointer;transition:border-color .15s ease, background .15s ease;
+  }
+  .role-option input{margin:0;accent-color:var(--harvest);}
+  .role-option.active{border-color:var(--harvest);background:rgba(201,138,43,.12);}
   .honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
   .turnstile-wrap{display:flex;justify-content:center;margin:.3rem 0;}
   .signup-form button{
@@ -253,39 +203,13 @@
     <div class="stamp">
       <svg viewBox="0 0 200 210" width="100%" height="100%"><path d="M100,26 C132,26 152,64 152,98 C152,126 134,144 118,156 L100,192 L82,156 C66,144 48,126 48,98 C48,64 68,26 100,26 Z" fill="#2F4A3C"></path><circle cx="100" cy="98" r="22" fill="#F1EFE1"></circle><circle cx="100" cy="98" r="13" fill="#C98A2B"></circle></svg>
     </div>
-    <h1>The board's not lit yet.</h1>
-    <p class="tag">TheDirectFarmShop — what's actually in stock, near you, today. We're setting up the first patch of farms. Here's what's coming, and how to hear about it first.</p>
-
-    <div class="board" id="board">
-      <ul>
-        <li data-item>
-          <span class="name"><span class="tick">✓</span> Free-range eggs, dozen</span>
-          <span class="price">£3.20</span>
-          <span class="stamp-out">SOLD OUT</span>
-        </li>
-        <li data-item>
-          <span class="name"><span class="tick">✓</span> Purple sprouting broccoli</span>
-          <span class="price">£1.80 / bunch</span>
-          <span class="stamp-out">SOLD OUT</span>
-        </li>
-        <li data-item class="sold">
-          <span class="name"><span class="tick">✓</span> Raw honey, 340g</span>
-          <span class="price">£6.00</span>
-          <span class="stamp-out">SOLD OUT</span>
-        </li>
-        <li data-item>
-          <span class="name"><span class="tick">✓</span> Raw milk, 1L</span>
-          <span class="price">£1.10</span>
-          <span class="stamp-out">SOLD OUT</span>
-        </li>
-      </ul>
-      <div class="hint">this is what a real board will look like — tap an item</div>
-    </div>
+    <h1>The marketplace isn't open yet.</h1>
+    <p class="tag">TheDirectFarmShop — every farm in the country, sorted by what's nearest to you. We're onboarding the first farms. Here's what's coming, and how to hear about it first.</p>
 
     <div class="pillars">
       <div class="pillar"><h3>Honest</h3><p>Real stock, real prices, real farmers. No dressing it up, no stock photos from spring.</p></div>
-      <div class="pillar"><h3>Local-first</h3><p>Every farm in the country is on the board — sorted so the ones nearest you show up first.</p></div>
-      <div class="pillar"><h3>Live</h3><p>What's on the board is what's actually left today — it updates as things sell out.</p></div>
+      <div class="pillar"><h3>Local-first</h3><p>Every farm in the country is listed — sorted so the ones nearest you show up first.</p></div>
+      <div class="pillar"><h3>Live</h3><p>What's listed is what's actually left today — stock updates live as it sells.</p></div>
     </div>
   </div>
 </header>
@@ -325,11 +249,11 @@
       <div class="step">
         <div class="num">STEP 01</div>
         <h3>Give us your postcode</h3>
-        <p>So we can sort the board by what's closest — though every farm in the country is on there if you want to search further afield.</p>
+        <p>So we can sort listings by what's closest — though every farm in the country is on there if you want to search further afield.</p>
       </div>
       <div class="step">
         <div class="num">STEP 02</div>
-        <h3>See today's board</h3>
+        <h3>Browse today's listings</h3>
         <p>Browse by category, same as any online shop — what's been picked, what's left, plainly priced, nearest farms first.</p>
       </div>
       <div class="step">
@@ -351,9 +275,20 @@
     <div class="signup-box">
       <span class="eyebrow" style="color:var(--sage);">Be first to know</span>
       <h2>Get a note the day we go live in your area</h2>
-      <p class="sub">No spam, no chasing — just one email, the moment your patch is on the board.</p>
+      <p class="sub">No spam, no chasing — just one email, the moment your patch goes live.</p>
 
       <form class="signup-form" id="signup-form" novalidate>
+        <div class="field">
+          <span id="role-label" style="font-family:var(--mono);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage);">I'm here as a…</span>
+          <div class="role-toggle" role="radiogroup" aria-labelledby="role-label">
+            <label class="role-option active">
+              <input type="radio" name="role" value="shopper" checked> Shopper — I want to buy
+            </label>
+            <label class="role-option">
+              <input type="radio" name="role" value="farmer"> Farmer — I want to sell
+            </label>
+          </div>
+        </div>
         <div class="field">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
@@ -389,9 +324,10 @@
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
-document.querySelectorAll('.board li[data-item]').forEach(function(li){
-  li.addEventListener('click', function(){
-    li.classList.toggle('sold');
+document.querySelectorAll('.role-option input').forEach(function(input){
+  input.addEventListener('change', function(){
+    document.querySelectorAll('.role-option').forEach(function(opt){ opt.classList.remove('active'); });
+    input.closest('.role-option').classList.add('active');
   });
 });
 
@@ -406,6 +342,7 @@ document.querySelectorAll('.board li[data-item]').forEach(function(li){
     var email = form.email.value.trim();
     var postcode = form.postcode.value.trim();
     var company = form.company.value.trim();
+    var role = (form.querySelector('input[name="role"]:checked') || {}).value || 'shopper';
     var token = window.turnstile ? window.turnstile.getResponse() : '';
 
     if(!email){
@@ -426,7 +363,7 @@ document.querySelectorAll('.board li[data-item]').forEach(function(li){
     fetch('/api/subscribe', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, postcode: postcode, company: company, turnstileToken: token})
+      body: JSON.stringify({email: email, postcode: postcode, role: role, company: company, turnstileToken: token})
     })
     .then(function(res){ return res.json().then(function(data){ return {ok: res.ok, data: data}; }); })
     .then(function(result){

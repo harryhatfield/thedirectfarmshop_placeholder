@@ -1,15 +1,17 @@
 // Cloudflare Pages Function — POST /api/subscribe
 // Verifies a Turnstile CAPTCHA token, adds the signup to a Resend Audience
 // (this is the waitlist itself — no separate database), and sends a
-// confirmation email via Resend.
+// confirmation email via Resend. Shoppers and farmers go into separate
+// audiences so each group can be followed up with separately.
 //
 // Required environment variables (set in the Cloudflare Pages project):
-//   TURNSTILE_SECRET_KEY  — secret key for the Turnstile widget
-//   RESEND_API_KEY        — Resend API key
-//   RESEND_AUDIENCE_ID    — Resend Audience ID to add contacts to
-//   RESEND_FROM           — verified sender, e.g. "TheDirectFarmShop <hello@thedirectfarmshop.com>"
+//   TURNSTILE_SECRET_KEY        — secret key for the Turnstile widget
+//   RESEND_API_KEY              — Resend API key
+//   RESEND_AUDIENCE_ID_SHOPPERS — Resend Audience ID for shopper signups
+//   RESEND_AUDIENCE_ID_FARMERS  — Resend Audience ID for farmer signups
+//   RESEND_FROM                 — verified sender, e.g. "TheDirectFarmShop <hello@thedirectfarmshop.com>"
 // Optional:
-//   NOTIFY_EMAIL           — internal address to notify on each new signup
+//   NOTIFY_EMAIL                — internal address to notify on each new signup
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -21,6 +23,7 @@ export async function onRequestPost({ request, env }) {
 
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const postcode = typeof body.postcode === "string" ? body.postcode.trim().slice(0, 16) : "";
+  const role = body.role === "farmer" ? "farmer" : "shopper";
   const company = typeof body.company === "string" ? body.company.trim() : "";
   const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
 
@@ -51,9 +54,11 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: "Captcha check failed — try again." }, 400);
   }
 
-  // Add to the Resend Audience — this is the waitlist.
+  // Add to the Resend Audience — this is the waitlist. Shoppers and farmers
+  // are kept in separate audiences so each can be followed up with differently.
+  const audienceId = role === "farmer" ? env.RESEND_AUDIENCE_ID_FARMERS : env.RESEND_AUDIENCE_ID_SHOPPERS;
   const audienceRes = await fetch(
-    `https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`,
+    `https://api.resend.com/audiences/${audienceId}/contacts`,
     {
       method: "POST",
       headers: {
@@ -84,8 +89,8 @@ export async function onRequestPost({ request, env }) {
     body: JSON.stringify({
       from: env.RESEND_FROM,
       to: email,
-      subject: "You're on the list",
-      html: confirmationHtml(postcode),
+      subject: role === "farmer" ? "You're on the list — we'll be in touch" : "You're on the list",
+      html: confirmationHtml(postcode, role),
     }),
   }).catch((err) => console.error("Confirmation email failed", err));
 
@@ -99,8 +104,8 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify({
         from: env.RESEND_FROM,
         to: env.NOTIFY_EMAIL,
-        subject: "New waitlist signup",
-        html: `<p>${escapeHtml(email)} — ${escapeHtml(postcode || "no postcode given")}</p>`,
+        subject: `New ${role} signup`,
+        html: `<p>${escapeHtml(email)} — ${role} — ${escapeHtml(postcode || "no postcode given")}</p>`,
       }),
     }).catch((err) => console.error("Notify email failed", err));
   }
@@ -124,13 +129,16 @@ function escapeHtml(str) {
   );
 }
 
-function confirmationHtml(postcode) {
+function confirmationHtml(postcode, role) {
+  const near = postcode ? ` near <strong>${escapeHtml(postcode)}</strong>` : "";
+  const body =
+    role === "farmer"
+      ? `<p>Thanks for your interest in selling on TheDirectFarmShop${near}. We're onboarding farms ahead of launch — someone from the team will email you directly about listing your produce.</p>`
+      : `<p>Thanks for putting your name down for TheDirectFarmShop${near}. We'll email you the moment your patch goes live — real stock, straight from local farms.</p>`;
   return `
     <div style="font-family: Georgia, serif; max-width: 480px; margin: 0 auto; color:#23261E;">
       <h1 style="font-size:20px;">You're on the list.</h1>
-      <p>Thanks for putting your name down for TheDirectFarmShop${
-        postcode ? ` near <strong>${escapeHtml(postcode)}</strong>` : ""
-      }. We'll email you the moment your patch goes live — real stock, straight from local farms.</p>
+      ${body}
       <p>Talk soon,<br>TheDirectFarmShop</p>
     </div>
   `;
