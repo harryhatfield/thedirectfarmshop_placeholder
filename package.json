@@ -1,9 +1,9 @@
 {
-  "name": "thedirectfarmshop-placeholder",
+  "name": "thedirectfarmshop-api",
   "private": true,
   "scripts": {
-    "dev": "wrangler pages dev . --compatibility-date=2026-08-27",
-    "deploy": "wrangler pages deploy . --project-name=thedirectfarmshop-placeholder"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "wrangler": "^3.90.0"

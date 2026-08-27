@@ -1,10 +1,15 @@
-// Cloudflare Pages Function — POST /api/subscribe
-// Verifies a Turnstile CAPTCHA token, adds the signup to a Resend Audience
-// (this is the waitlist itself — no separate database), and sends a
-// confirmation email via Resend. Shoppers and farmers go into separate
-// audiences so each group can be followed up with separately.
+// Standalone Cloudflare Worker — POST /subscribe
 //
-// Required environment variables (set in the Cloudflare Pages project):
+// The static site is hosted on GitHub Pages, which can't run server code,
+// so this API lives separately on Cloudflare Workers and is called
+// cross-origin from index.html. It verifies a Turnstile CAPTCHA token, adds
+// the signup to a Resend Audience (this is the waitlist itself — no
+// separate database), and sends a confirmation email via Resend. Shoppers
+// and farmers go into separate audiences so each group can be followed up
+// with separately.
+//
+// Required environment variables (set via `wrangler secret put` or the
+// Cloudflare dashboard → Workers & Pages → this worker → Settings → Variables):
 //   TURNSTILE_SECRET_KEY        — secret key for the Turnstile widget
 //   RESEND_API_KEY              — Resend API key
 //   RESEND_AUDIENCE_ID_SHOPPERS — Resend Audience ID for shopper signups
@@ -13,12 +18,38 @@
 // Optional:
 //   NOTIFY_EMAIL                — internal address to notify on each new signup
 
-export async function onRequestPost({ request, env }) {
+// Origins allowed to call this API. Add your production domain(s) here.
+const ALLOWED_ORIGINS = [
+  "https://thedirectfarmshop.com",
+  "https://www.thedirectfarmshop.com",
+  "https://harryhatfield.github.io",
+  "http://localhost:8000",
+];
+
+export default {
+  async fetch(request, env) {
+    const origin = request.headers.get("Origin") || "";
+    const cors = corsHeaders(origin);
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: cors });
+    }
+
+    const url = new URL(request.url);
+    if (request.method !== "POST" || url.pathname !== "/subscribe") {
+      return json({ ok: false, error: "Not found." }, 404, cors);
+    }
+
+    return handleSubscribe(request, env, cors);
+  },
+};
+
+async function handleSubscribe(request, env, cors) {
   let body;
   try {
     body = await request.json();
   } catch {
-    return json({ ok: false, error: "Bad request." }, 400);
+    return json({ ok: false, error: "Bad request." }, 400, cors);
   }
 
   const email = typeof body.email === "string" ? body.email.trim() : "";
@@ -29,15 +60,15 @@ export async function onRequestPost({ request, env }) {
 
   // Honeypot: real visitors never fill this in.
   if (company) {
-    return json({ ok: true });
+    return json({ ok: true }, 200, cors);
   }
 
   if (!isValidEmail(email)) {
-    return json({ ok: false, error: "That email doesn't look right." }, 400);
+    return json({ ok: false, error: "That email doesn't look right." }, 400, cors);
   }
 
   if (!turnstileToken) {
-    return json({ ok: false, error: "Captcha check missing — refresh and try again." }, 400);
+    return json({ ok: false, error: "Captcha check missing — refresh and try again." }, 400, cors);
   }
 
   const verify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
@@ -51,32 +82,29 @@ export async function onRequestPost({ request, env }) {
   }).then((r) => r.json());
 
   if (!verify.success) {
-    return json({ ok: false, error: "Captcha check failed — try again." }, 400);
+    return json({ ok: false, error: "Captcha check failed — try again." }, 400, cors);
   }
 
   // Add to the Resend Audience — this is the waitlist. Shoppers and farmers
   // are kept in separate audiences so each can be followed up with differently.
   const audienceId = role === "farmer" ? env.RESEND_AUDIENCE_ID_FARMERS : env.RESEND_AUDIENCE_ID_SHOPPERS;
-  const audienceRes = await fetch(
-    `https://api.resend.com/audiences/${audienceId}/contacts`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        unsubscribed: false,
-        ...(postcode ? { first_name: postcode } : {}),
-      }),
-    }
-  );
+  const audienceRes = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      unsubscribed: false,
+      ...(postcode ? { first_name: postcode } : {}),
+    }),
+  });
 
   if (!audienceRes.ok) {
     const detail = await audienceRes.text().catch(() => "");
     console.error("Resend audience add failed", audienceRes.status, detail);
-    return json({ ok: false, error: "That didn't go through — try again in a moment." }, 502);
+    return json({ ok: false, error: "That didn't go through — try again in a moment." }, 502, cors);
   }
 
   // Confirmation email — best-effort, doesn't block success.
@@ -110,7 +138,19 @@ export async function onRequestPost({ request, env }) {
     }).catch((err) => console.error("Notify email failed", err));
   }
 
-  return json({ ok: true });
+  return json({ ok: true }, 200, cors);
+}
+
+function corsHeaders(origin) {
+  const headers = {
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+    headers["Vary"] = "Origin";
+  }
+  return headers;
 }
 
 function isValidEmail(email) {
@@ -144,9 +184,9 @@ function confirmationHtml(postcode, role) {
   `;
 }
 
-function json(data, status = 200) {
+function json(data, status, cors) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...cors },
   });
 }

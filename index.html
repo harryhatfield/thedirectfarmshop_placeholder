@@ -1,11 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TheDirectFarmShop — Coming soon</title>
-<meta name="description" content="What's actually in stock, near you, today. TheDirectFarmShop is coming — sign up and we'll tell you the moment it's live in your postcode.">
+<title>TheDirectFarmShop — Buy Direct From Local Farms, UK-Wide | Coming Soon</title>
+<meta name="description" content="TheDirectFarmShop is an online farm shop marketplace for direct farm produce — fruit, veg, meat, dairy and more from local farms across the UK. Sign up to hear the moment we launch near you.">
+<meta name="keywords" content="farm shop, direct farm produce, buy direct from farmers, local farm shop, online farm shop, UK farm marketplace">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#2F4A3C">
+<link rel="canonical" href="https://thedirectfarmshop.com/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TheDirectFarmShop">
+<meta property="og:url" content="https://thedirectfarmshop.com/">
+<meta property="og:title" content="TheDirectFarmShop — Buy Direct From Local Farms, UK-Wide">
+<meta property="og:description" content="An online farm shop marketplace for direct farm produce — every local farm in the UK, sorted by what's nearest to you. Coming soon.">
+<meta property="og:image" content="https://thedirectfarmshop.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TheDirectFarmShop — Buy Direct From Local Farms, UK-Wide">
+<meta name="twitter:description" content="An online farm shop marketplace for direct farm produce — every local farm in the UK, sorted by what's nearest to you. Coming soon.">
+<meta name="twitter:image" content="https://thedirectfarmshop.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "TheDirectFarmShop",
+  "url": "https://thedirectfarmshop.com/",
+  "logo": "https://thedirectfarmshop.com/favicon.svg",
+  "description": "Online farm shop marketplace for direct farm produce from local farms across the UK."
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@400;500;600&family=Kalam:wght@400;700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -201,10 +230,10 @@
   <div class="wrap">
     <span class="eyebrow">Coming soon</span>
     <div class="stamp">
-      <svg viewBox="0 0 200 210" width="100%" height="100%"><path d="M100,26 C132,26 152,64 152,98 C152,126 134,144 118,156 L100,192 L82,156 C66,144 48,126 48,98 C48,64 68,26 100,26 Z" fill="#2F4A3C"></path><circle cx="100" cy="98" r="22" fill="#F1EFE1"></circle><circle cx="100" cy="98" r="13" fill="#C98A2B"></circle></svg>
+      <svg viewBox="0 0 200 210" width="100%" height="100%" role="img" aria-label="TheDirectFarmShop logo"><path d="M100,26 C132,26 152,64 152,98 C152,126 134,144 118,156 L100,192 L82,156 C66,144 48,126 48,98 C48,64 68,26 100,26 Z" fill="#2F4A3C"></path><circle cx="100" cy="98" r="22" fill="#F1EFE1"></circle><circle cx="100" cy="98" r="13" fill="#C98A2B"></circle></svg>
     </div>
     <h1>The marketplace isn't open yet.</h1>
-    <p class="tag">TheDirectFarmShop — every farm in the country, sorted by what's nearest to you. We're onboarding the first farms. Here's what's coming, and how to hear about it first.</p>
+    <p class="tag">TheDirectFarmShop is the online farm shop for direct farm produce — every farm in the country, sorted by what's nearest to you. We're onboarding the first farms. Here's what's coming, and how to hear about it first.</p>
 
     <div class="pillars">
       <div class="pillar"><h3>Honest</h3><p>Real stock, real prices, real farmers. No dressing it up, no stock photos from spring.</p></div>
@@ -219,7 +248,7 @@
     <div class="section-head center">
       <span class="eyebrow">The idea</span>
       <h2>One marketplace, every farm in the country</h2>
-      <p>TheDirectFarmShop is a single marketplace where farms across the UK list their own stock — picked, milked, baked, or collected <em>today</em> — priced plainly and updated as it sells. Browse it like your usual online supermarket shop: everything's sorted into categories, so you pick items and quantities and check out — except every item comes from a named farm instead of a warehouse, and the whole country's on there, sorted by what's closest to you first.</p>
+      <p>TheDirectFarmShop is a single marketplace for direct farm produce, where farms across the UK list their own stock — picked, milked, baked, or collected <em>today</em> — priced plainly and updated as it sells. Browse it like your usual online supermarket shop: everything's sorted into categories, so you pick items and quantities and check out — except every item comes from a named farm instead of a warehouse, and the whole country's on there, sorted by what's closest to you first.</p>
     </div>
     <div class="pillars" style="margin-top:2.2rem;">
       <div class="pillar"><h3>One marketplace</h3><p>Every farm sells through the same listings — no separate sites or accounts, just one place to shop.</p></div>
@@ -324,6 +353,10 @@
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
+// The site is static (GitHub Pages) — the signup form calls a separate
+// Cloudflare Worker for the API. Update this once the worker is deployed.
+var SUBSCRIBE_API_URL = 'https://thedirectfarmshop-api.YOUR-SUBDOMAIN.workers.dev/subscribe';
+
 document.querySelectorAll('.role-option input').forEach(function(input){
   input.addEventListener('change', function(){
     document.querySelectorAll('.role-option').forEach(function(opt){ opt.classList.remove('active'); });
@@ -360,7 +393,7 @@ document.querySelectorAll('.role-option input').forEach(function(input){
     status.dataset.state = '';
     status.textContent = 'Sending…';
 
-    fetch('/api/subscribe', {
+    fetch(SUBSCRIBE_API_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email: email, postcode: postcode, role: role, company: company, turnstileToken: token})
