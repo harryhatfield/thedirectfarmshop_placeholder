@@ -354,8 +354,8 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 // The site is static (GitHub Pages) — the signup form calls a separate
-// Cloudflare Worker for the API. Update this once the worker is deployed.
-var SUBSCRIBE_API_URL = 'https://thedirectfarmshop-api.YOUR-SUBDOMAIN.workers.dev/subscribe';
+// Cloudflare Worker for the API, on its own custom domain.
+var SUBSCRIBE_API_URL = 'https://api.thedirectfarmshop.com/subscribe';
 
 document.querySelectorAll('.role-option input').forEach(function(input){
   input.addEventListener('change', function(){

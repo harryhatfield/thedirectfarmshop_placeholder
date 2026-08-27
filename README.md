@@ -62,12 +62,16 @@ Never put the secret key in code, only in the Worker's environment variables.
    ```bash
    npm run deploy
    ```
-   This prints the Worker's URL (`https://thedirectfarmshop-api.<your-subdomain>.workers.dev`).
-4. In `index.html`, set `SUBSCRIBE_API_URL` (near the bottom, in the
-   `<script>` block) to that URL + `/subscribe`. Optionally add a Worker
-   **custom domain** (Cloudflare dashboard → Workers & Pages → this worker
-   → Settings → Domains & Routes) — e.g. `api.thedirectfarmshop.com` — and
-   use that instead.
+   This prints the Worker's default URL (`https://thedirectfarmshop-api.<your-subdomain>.workers.dev`) — useful for a quick first test.
+4. Add a **custom domain** so the API lives on your own domain: Cloudflare
+   dashboard → Workers & Pages → this worker → Settings → Domains & Routes
+   → **Add Custom Domain** → `api.thedirectfarmshop.com`. This requires
+   `thedirectfarmshop.com`'s DNS zone to be on Cloudflare (it adds the DNS
+   record itself once you confirm) — it doesn't require the *site* to be
+   hosted on Cloudflare, only the DNS.
+   `index.html` already points `SUBSCRIBE_API_URL` at
+   `https://api.thedirectfarmshop.com/subscribe` — no page change needed
+   once the custom domain is live.
 5. In `worker.js`, check `ALLOWED_ORIGINS` includes your real domain(s) —
    the Worker only answers signup requests from origins on that list
    (CORS). Update and redeploy if you add `www` or change domains.
