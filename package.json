@@ -1,0 +1,11 @@
+{
+  "name": "thedirectfarmshop-placeholder",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev . --compatibility-date=2026-08-27",
+    "deploy": "wrangler pages deploy . --project-name=thedirectfarmshop-placeholder"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

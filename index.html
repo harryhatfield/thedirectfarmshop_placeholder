@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheDirectFarmShop — Coming soon</title>
+<meta name="description" content="What's actually in stock, near you, today. TheDirectFarmShop is coming — sign up and we'll tell you the moment it's live in your postcode.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@400;500;600&family=Kalam:wght@400;700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#23261E;
+    --hedgerow:#2F4A3C;
+    --hedgerow-dark:#213228;
+    --harvest:#C98A2B;
+    --harvest-dark:#a06f21;
+    --plum:#8B3A2B;
+    --paper:#F1EFE1;
+    --paper-warm:#EAE6D4;
+    --sage:#AAB89C;
+    --sage-dark:#8a9a7c;
+    --white:#FCFBF6;
+
+    --display: 'Alfa Slab One', serif;
+    --body: 'Karla', sans-serif;
+    --chalk: 'Kalam', cursive;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--charcoal);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;max-width:100%;}
+  section{padding:5rem 1.5rem;}
+  .wrap{max-width:1040px;margin:0 auto;}
+
+  h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0 0 .6em;letter-spacing:.2px;}
+  h2{font-size:clamp(1.6rem,3.2vw,2.3rem);}
+  h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:1.5px;}
+  p{margin:0 0 1em;max-width:60ch;}
+  .center p{margin-left:auto;margin-right:auto;}
+  .eyebrow{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:2.5px;
+    font-size:.72rem;
+    color:var(--hedgerow);
+    display:inline-flex;
+    align-items:center;
+    gap:.5em;
+    margin-bottom:1.1em;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--harvest);display:inline-block;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:4.5rem 1.5rem 3rem;
+    text-align:center;
+  }
+  .hero .stamp{width:100px;height:105px;margin:0 auto 1.6rem;color:var(--hedgerow);}
+  .hero h1{
+    font-size:clamp(2.1rem,6vw,3.6rem);
+    color:var(--hedgerow);
+    max-width:16ch;margin:0 auto .35em;
+  }
+  .hero .tag{
+    font-family:var(--chalk);
+    font-size:clamp(1.05rem,2.4vw,1.35rem);
+    color:var(--charcoal);
+    max-width:34ch;margin:0 auto 2.6rem;
+  }
+
+  /* ---------- STOCK BOARD ---------- */
+  .board{
+    background:var(--hedgerow-dark);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,.05), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(255,255,255,.04), transparent 55%);
+    border-radius:10px;
+    padding:2.1rem 1.8rem 1.9rem;
+    max-width:560px;
+    margin:0 auto;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.5), inset 0 0 0 6px #17251c, inset 0 0 0 8px #3c5644;
+    text-align:left;
+    position:relative;
+  }
+  .board::before{
+    content:"PREVIEW — TODAY'S BOARD";
+    display:block;
+    font-family:var(--mono);
+    color:var(--sage);
+    font-size:.68rem;
+    letter-spacing:2.5px;
+    margin-bottom:1.1rem;
+  }
+  .board ul{list-style:none;margin:0;padding:0;}
+  .board li{
+    display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+    font-family:var(--chalk);
+    color:var(--paper);
+    font-size:1.22rem;
+    padding:.55rem 0;
+    border-bottom:1px dashed rgba(241,239,225,.18);
+    position:relative;
+    cursor:pointer;
+    user-select:none;
+  }
+  .board li:last-child{border-bottom:none;}
+  .board li .name{display:flex;align-items:baseline;gap:.55em;}
+  .board li .tick{color:var(--harvest);font-family:var(--body);font-weight:700;font-size:1rem;}
+  .board li .price{font-family:var(--mono);font-size:.92rem;color:var(--sage);white-space:nowrap;}
+  .board li .stamp-out{
+    position:absolute;left:38%;top:50%;
+    transform:translate(-50%,-50%) rotate(-9deg) scale(.4);
+    font-family:var(--mono);font-weight:600;
+    font-size:.95rem;letter-spacing:2px;
+    color:var(--plum);
+    border:2.5px solid var(--plum);
+    padding:.15em .5em;
+    border-radius:3px;
+    opacity:0;
+    transition:transform .35s cubic-bezier(.2,1.4,.4,1), opacity .35s ease;
+    pointer-events:none;
+    background:rgba(35,38,30,.55);
+  }
+  .board li.sold .stamp-out{opacity:1;transform:translate(-50%,-50%) rotate(-9deg) scale(1);}
+  .board li.sold .name,.board li.sold .price{opacity:.35;text-decoration:line-through;text-decoration-color:var(--plum);}
+  .board .hint{
+    margin-top:1.2rem;font-family:var(--mono);font-size:.66rem;color:var(--sage-dark);
+    letter-spacing:.5px;
+  }
+
+  /* ---------- PILLARS ---------- */
+  .pillars{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;
+    max-width:900px;margin:3.4rem auto 0;
+  }
+  .pillar{
+    background:var(--white);
+    border:1px solid rgba(35,38,30,.1);
+    border-radius:8px;padding:1.5rem 1.4rem;
+  }
+  .pillar h3{color:var(--hedgerow);margin-bottom:.5em;}
+  .pillar p{font-size:.92rem;margin:0;max-width:none;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-head{max-width:640px;margin-bottom:2.6rem;}
+  .section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+  .section-head.center .eyebrow::before{display:none;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;
+  }
+  .step{
+    background:var(--white);
+    border:1px solid rgba(35,38,30,.1);
+    border-radius:8px;padding:1.6rem 1.3rem;
+  }
+  .step .num{
+    font-family:var(--mono);color:var(--harvest-dark);font-size:.72rem;
+    letter-spacing:1.5px;margin-bottom:.9em;
+  }
+  .step h3{font-size:.95rem;margin-bottom:.5em;color:var(--hedgerow);}
+  .step p{font-size:.88rem;margin:0;max-width:none;}
+
+  /* ---------- SIGNUP ---------- */
+  .signup-box{
+    background:var(--hedgerow-dark);
+    border-radius:10px;
+    padding:2.8rem 2rem;
+    max-width:560px;
+    margin:0 auto;
+    text-align:center;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.5);
+  }
+  .signup-box h2{color:var(--paper);}
+  .signup-box .sub{color:var(--sage);font-size:.95rem;max-width:40ch;margin:0 auto 1.8rem;}
+  .signup-form{display:flex;flex-direction:column;gap:.8rem;text-align:left;}
+  .field{display:flex;flex-direction:column;gap:.35rem;}
+  .field label{
+    font-family:var(--mono);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--sage);
+  }
+  .field input{
+    font-family:var(--body);font-size:1rem;
+    padding:.75em .9em;border-radius:6px;border:1px solid rgba(241,239,225,.25);
+    background:rgba(252,251,246,.06);color:var(--paper);
+  }
+  .field input::placeholder{color:rgba(241,239,225,.4);}
+  .field input:focus{outline:2px solid var(--harvest);outline-offset:1px;}
+  .honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  .turnstile-wrap{display:flex;justify-content:center;margin:.3rem 0;}
+  .signup-form button{
+    font-family:var(--body);font-weight:700;font-size:.95rem;
+    background:var(--harvest);color:var(--charcoal);border:none;
+    padding:.9em 1.4em;border-radius:6px;cursor:pointer;
+    transition:background .15s ease;
+  }
+  .signup-form button:hover{background:var(--harvest-dark);}
+  .signup-form button:disabled{opacity:.6;cursor:default;}
+  .form-status{
+    font-family:var(--mono);font-size:.78rem;min-height:1.2em;
+    text-align:center;margin-top:.4rem;
+  }
+  .form-status[data-state="ok"]{color:var(--sage);}
+  .form-status[data-state="error"]{color:#e0a394;}
+  .privacy-note{
+    font-family:var(--mono);font-size:.64rem;color:var(--sage-dark);
+    text-align:center;margin-top:1.2rem;letter-spacing:.3px;max-width:none;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:3rem 1.5rem 4rem;text-align:center;}
+  footer .wordmark{font-size:1.3rem;margin-bottom:.3em;font-family:var(--display);color:var(--hedgerow);}
+  footer p{margin:0 auto;font-family:var(--mono);font-size:.7rem;opacity:.55;letter-spacing:.5px;max-width:none;}
+
+  @media (max-width:720px){
+    .pillars,.steps{grid-template-columns:1fr;}
+    section{padding:3.2rem 1.2rem;}
+    .signup-box{padding:2.2rem 1.4rem;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Coming soon</span>
+    <div class="stamp">
+      <svg viewBox="0 0 200 210" width="100%" height="100%"><path d="M100,26 C132,26 152,64 152,98 C152,126 134,144 118,156 L100,192 L82,156 C66,144 48,126 48,98 C48,64 68,26 100,26 Z" fill="#2F4A3C"></path><circle cx="100" cy="98" r="22" fill="#F1EFE1"></circle><circle cx="100" cy="98" r="13" fill="#C98A2B"></circle></svg>
+    </div>
+    <h1>The board's not lit yet.</h1>
+    <p class="tag">TheDirectFarmShop — what's actually in stock, near you, today. We're setting up the first patch of farms. Here's what's coming, and how to hear about it first.</p>
+
+    <div class="board" id="board">
+      <ul>
+        <li data-item>
+          <span class="name"><span class="tick">✓</span> Free-range eggs, dozen</span>
+          <span class="price">£3.20</span>
+          <span class="stamp-out">SOLD OUT</span>
+        </li>
+        <li data-item>
+          <span class="name"><span class="tick">✓</span> Purple sprouting broccoli</span>
+          <span class="price">£1.80 / bunch</span>
+          <span class="stamp-out">SOLD OUT</span>
+        </li>
+        <li data-item class="sold">
+          <span class="name"><span class="tick">✓</span> Raw honey, 340g</span>
+          <span class="price">£6.00</span>
+          <span class="stamp-out">SOLD OUT</span>
+        </li>
+        <li data-item>
+          <span class="name"><span class="tick">✓</span> Raw milk, 1L</span>
+          <span class="price">£1.10</span>
+          <span class="stamp-out">SOLD OUT</span>
+        </li>
+      </ul>
+      <div class="hint">this is what a real board will look like — tap an item</div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar"><h3>Honest</h3><p>Real stock, real prices, real farmers. No dressing it up, no stock photos from spring.</p></div>
+      <div class="pillar"><h3>Local</h3><p>Postcode-first. You'll see what's near your patch, not a nationwide catalogue.</p></div>
+      <div class="pillar"><h3>Live</h3><p>What's on the board is what's actually left today — it updates as things sell out.</p></div>
+    </div>
+  </div>
+</header>
+
+<section id="idea">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">The idea</span>
+      <h2>A farm shop for your postcode, not the whole country</h2>
+      <p>Most "local food" sites are really just a catalogue — same list whether you're two miles from the farm or two hundred. TheDirectFarmShop works the other way round: tell us your postcode, and we'll show you exactly what the farms near you have picked, milked, baked, or collected <em>today</em> — with a running total of what's actually left. When something's gone, it's marked sold out. No apology, no filler — just the truth, updated as it happens.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="background:var(--paper-warm);">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">How it'll work</span>
+      <h2>Four steps, start to finish</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">STEP 01</div>
+        <h3>Give us your postcode</h3>
+        <p>So we know which farms are actually near you — not a warehouse three counties over.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 02</div>
+        <h3>See today's board</h3>
+        <p>What's been picked, what's left, and what it costs — plainly priced, updated as stock moves.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 03</div>
+        <h3>Order what you want</h3>
+        <p>Reserve it online in a couple of taps. No account faff, no minimum basket.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 04</div>
+        <h3>Collect or get it delivered</h3>
+        <p>Straight from the farm, on their schedule — you'll know exactly when it's ready.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="signup">
+  <div class="wrap">
+    <div class="signup-box">
+      <span class="eyebrow" style="color:var(--sage);">Be first to know</span>
+      <h2>Get a note the day we go live in your area</h2>
+      <p class="sub">No spam, no chasing — just one email, the moment your patch is on the board.</p>
+
+      <form class="signup-form" id="signup-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="postcode">Postcode <span style="opacity:.6;text-transform:none;letter-spacing:0;">(optional, helps us prioritise)</span></label>
+          <input type="text" id="postcode" name="postcode" placeholder="e.g. BA11" autocomplete="postal-code">
+        </div>
+
+        <!-- Honeypot: left blank by people, filled in by bots -->
+        <div class="honeypot" aria-hidden="true">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="turnstile-wrap">
+          <div class="cf-turnstile" data-sitekey="0x00000000000000000000AA" data-theme="dark"></div>
+        </div>
+
+        <button type="submit">Join the list</button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <p class="privacy-note">We'll only use this to tell you when we launch near you. Unsubscribe any time.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wordmark">TheDirectFarmShop</div>
+  <p>COMING SOON · REAL STOCK, NEAR YOU, TODAY</p>
+</footer>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+document.querySelectorAll('.board li[data-item]').forEach(function(li){
+  li.addEventListener('click', function(){
+    li.classList.toggle('sold');
+  });
+});
+
+(function(){
+  var form = document.getElementById('signup-form');
+  var status = document.getElementById('form-status');
+  var button = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var email = form.email.value.trim();
+    var postcode = form.postcode.value.trim();
+    var company = form.company.value.trim();
+    var token = window.turnstile ? window.turnstile.getResponse() : '';
+
+    if(!email){
+      status.dataset.state = 'error';
+      status.textContent = "That email doesn't look right — check it and try again.";
+      return;
+    }
+    if(!token){
+      status.dataset.state = 'error';
+      status.textContent = "Just tick the box above so we know you're not a bot.";
+      return;
+    }
+
+    button.disabled = true;
+    status.dataset.state = '';
+    status.textContent = 'Sending…';
+
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, postcode: postcode, company: company, turnstileToken: token})
+    })
+    .then(function(res){ return res.json().then(function(data){ return {ok: res.ok, data: data}; }); })
+    .then(function(result){
+      if(result.ok && result.data.ok){
+        status.dataset.state = 'ok';
+        status.textContent = "You're on the list. We'll email you the second your patch goes live.";
+        form.reset();
+        if(window.turnstile){ window.turnstile.reset(); }
+      } else {
+        status.dataset.state = 'error';
+        status.textContent = (result.data && result.data.error) || "That didn't go through — try again.";
+        if(window.turnstile){ window.turnstile.reset(); }
+      }
+    })
+    .catch(function(){
+      status.dataset.state = 'error';
+      status.textContent = "That didn't go through — check your connection and try again.";
+      if(window.turnstile){ window.turnstile.reset(); }
+    })
+    .finally(function(){
+      button.disabled = false;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
